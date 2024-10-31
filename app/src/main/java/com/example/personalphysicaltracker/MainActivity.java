@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private Button startTrackingButton;
     private Button stopTrackingButton;
     private TextView activityStatusText;
-    private TextView activityStatusText1;
     private BroadcastReceiver activityStatusReceiver;
     private static final int REQUEST_ACTIVITY_RECOGNITION = 1;
 
@@ -37,30 +37,31 @@ public class MainActivity extends AppCompatActivity {
         activityStatusReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d("ActivityRecognition", "onReceive chiamato");
                 String activityStatus = intent.getStringExtra("activity_status");
-                activityStatusText.setText(activityStatus);
                 if (activityStatus != null) {
+
                     activityStatusText.setText(activityStatus); // Aggiorna la TextView
                 }
             }
         };
+
         // Registra il BroadcastReceiver
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 activityStatusReceiver, new IntentFilter("com.example.UPDATE_UI"));
 
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION},
-                    REQUEST_ACTIVITY_RECOGNITION);
+        // Richiedi il permesso ACTIVITY_RECOGNITION per Android 10 e superiori
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (checkSelfPermission(Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, REQUEST_ACTIVITY_RECOGNITION);
+            }
         }
+
 
         startTrackingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startTracking();
-
             }
         });
 
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 stopTracking();
-
             }
         });
     }
@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startTracking() {
-        // Avvia il servizio in background per il rilevamento dell'attività
         Intent intent = new Intent(this, BackgroundDetectedActivitiesService.class);
         startService(intent);
         activityStatusText.setText("Status: Tracking started");
@@ -88,11 +87,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void stopTracking() {
-        // Ferma il servizio in background per il rilevamento dell'attività
         Intent intent = new Intent(this, BackgroundDetectedActivitiesService.class);
         stopService(intent);
         activityStatusText.setText("Status: Tracking stopped");
-        Log.d("button", "tracking stopped");
+        Log.d("button", "Tracking stopped");
     }
 
     @Override
