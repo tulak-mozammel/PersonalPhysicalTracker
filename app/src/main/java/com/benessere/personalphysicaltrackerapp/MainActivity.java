@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStartWalking;
     private Button btnStartDriving;
     private Button btnStopActivity;
+    private Button BtnopenReport;
     private UserActivityDao userActivityDao;
     private int userId = 1; // o recuperato dinamicamente
 
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnStartWalking = findViewById(R.id.btnStartWalking);
         btnStartDriving = findViewById(R.id.btnStartDriving);
         btnStopActivity = findViewById(R.id.btnStopActivity);
+        Button BtnopenReport = findViewById(R.id.openReportBtn);
 
 
         if (savedInstanceState == null) {
@@ -79,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 replaceFragment(new FirstFragment());
             }
+        });
+
+
+        BtnopenReport.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ActivityReport.class);
+            intent.putExtra("userId", 1); // o il tuo userId dinamico
+            startActivity(intent);
         });
 
 

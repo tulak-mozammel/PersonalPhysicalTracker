@@ -24,7 +24,7 @@
         <service
             android:name=".UserActivityIntentService"
             android:exported="false" />
-
+        <activity android:name=".ActivityReport" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

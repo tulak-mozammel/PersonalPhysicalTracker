@@ -40,6 +40,10 @@ public interface UserActivityDao {
     @Query("SELECT * FROM UserActivity WHERE user_id = :userId AND end_activity IS NULL ORDER BY start_activity DESC LIMIT 1")
     UserActivity getLastOpenActivity(int userId);
 
+    @Query("SELECT * FROM UserActivity WHERE user_id = :userId AND start_activity >= :startOfMonth")
+    LiveData<List<UserActivity>> getActivitiesFromMonth(int userId, long startOfMonth);
+
+
     @Update
     void update(UserActivity activity);
 

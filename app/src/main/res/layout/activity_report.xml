@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="350dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/noStepsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nessun passo registrato"
+        android:textSize="18sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

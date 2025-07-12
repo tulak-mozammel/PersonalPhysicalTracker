@@ -49,5 +49,6 @@ dependencies {
     implementation(libs.room.rxjava2)
     implementation(libs.play.services.location)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 }

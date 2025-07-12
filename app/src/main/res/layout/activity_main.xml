@@ -54,6 +54,8 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Start Still" />
+
+
     </LinearLayout>
 
     <!-- Stop button -->
@@ -63,6 +65,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Stop Attività" />
+
+    <Button
+        android:id="@+id/openReportBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apri Report Attività"
+        android:layout_margin="16dp" />
 
 
     <!-- Fragment container -->
