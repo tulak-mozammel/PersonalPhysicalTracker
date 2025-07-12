@@ -42,6 +42,13 @@
             android:text="Start Walking" />
 
         <Button
+            android:id="@+id/btnStartDriving"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Start Driving" />
+
+        <Button
             android:id="@+id/btnStartStill"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -56,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Stop Attività" />
+
 
     <!-- Fragment container -->
     <FrameLayout

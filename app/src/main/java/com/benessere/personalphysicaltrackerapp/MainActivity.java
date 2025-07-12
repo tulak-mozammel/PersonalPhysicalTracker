@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnFirst;
     private Button btnStartStill;
     private Button btnStartWalking;
+    private Button btnStartDriving;
     private Button btnStopActivity;
     private UserActivityDao userActivityDao;
     private int userId = 1; // o recuperato dinamicamente
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         btnFirst = findViewById(R.id.btnFirst);
         Button btnStartStill = findViewById(R.id.btnStartStill);
         Button btnStartWalking = findViewById(R.id.btnStartWalking);
+        btnStartDriving = findViewById(R.id.btnStartDriving);
         btnStopActivity = findViewById(R.id.btnStopActivity);
 
 
@@ -91,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity("Walking");
             startService(new Intent(this, StepCounterService.class)); // avvia contapassi
             Toast.makeText(this, "Started Walking", Toast.LENGTH_SHORT).show();
+        });
+
+        btnStartDriving.setOnClickListener(v -> {
+            startActivity("Driving");
+            Toast.makeText(this, "Started Driving", Toast.LENGTH_SHORT).show();
         });
 
         btnStopActivity.setOnClickListener(v -> {

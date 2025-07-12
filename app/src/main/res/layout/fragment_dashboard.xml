@@ -19,6 +19,41 @@
             android:id="@+id/listViewActivities"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <!-- button filtro per tipo attivita -->
+        <RadioGroup
+            android:id="@+id/radioGroupFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/radioAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radioWalking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Walking" />
+
+            <RadioButton
+                android:id="@+id/radioDriving"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Driving" />
+
+            <RadioButton
+                android:id="@+id/radioStill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Still" />
+        </RadioGroup>
+
     </LinearLayout>
 
 </FrameLayout>
