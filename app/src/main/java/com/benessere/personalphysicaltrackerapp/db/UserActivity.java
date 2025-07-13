@@ -54,12 +54,9 @@ public class UserActivity {
         return "Type: " + Type + " | Start: " + df.format(start_activity);
     }
 
-
     public String toStepString() {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         return "Date: " + df.format(start_activity) + " | Steps: " + Footsteps;
 
     }
-
-
 }

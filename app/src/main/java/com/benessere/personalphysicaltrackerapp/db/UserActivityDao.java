@@ -20,10 +20,6 @@ public interface UserActivityDao {
     @Query("SELECT * FROM UserActivity WHERE user_id = :user_id ORDER BY start_activity DESC")
     LiveData<List<UserActivity>> findActivitiesByUser(int user_id);
 
-
-    //@Query("SELECT * FROM UserActivity WHERE user_id = :user_id LIMIT 1")
-    //public LiveData<List<UserActivity>> findActivitiesByUser(int user_id);
-
     @Query("SELECT * FROM UserActivity WHERE user_id = :userId AND Type = :type ORDER BY start_activity DESC")
     LiveData<List<UserActivity>> findStepsByUser(int userId, String type);
 

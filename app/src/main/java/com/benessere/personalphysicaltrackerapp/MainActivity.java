@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.Manifest;
 import android.widget.Toast;
 
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -41,11 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStartWalking;
     private Button btnStartDriving;
     private Button btnStopActivity;
-    private Button BtnopenReport;
+    private Button btnopenReport;
+
     private UserActivityDao userActivityDao;
     private int userId = 1; // o recuperato dinamicamente
-
-
 
     private static final int PERMISSION_REQUEST_CODE = 1001;
     private String[] requiredPermissions;
@@ -63,31 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         btnDashboard = findViewById(R.id.btnDashboard);
         btnFirst = findViewById(R.id.btnFirst);
-        Button btnStartStill = findViewById(R.id.btnStartStill);
-        Button btnStartWalking = findViewById(R.id.btnStartWalking);
+        btnStartStill = findViewById(R.id.btnStartStill);
+        btnStartWalking = findViewById(R.id.btnStartWalking);
         btnStartDriving = findViewById(R.id.btnStartDriving);
         btnStopActivity = findViewById(R.id.btnStopActivity);
-        Button BtnopenReport = findViewById(R.id.openReportBtn);
-
-        // 👉 Richiesta permesso per notifiche (Android 13+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-            }
-        }
-
-
-
-        // Avvia notifiche periodiche ogni 6 ore
-        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(NotificationWorker.class, 6, TimeUnit.HOURS)
-                .build();
-        WorkManager.getInstance(this).enqueue(workRequest);
-
-
-        if (savedInstanceState == null) {
-            replaceFragment(new DashboardFragment());
-        }
-
+        btnopenReport = findViewById(R.id.openReportBtn);
 
         btnDashboard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,13 +81,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        BtnopenReport.setOnClickListener(v -> {
+        btnopenReport.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, ActivityReport.class);
             intent.putExtra("userId", 1); // o il tuo userId dinamico
             startActivity(intent);
         });
-
 
         btnStartStill.setOnClickListener(v -> {
             //endCurrentActivity(); // chiude quella precedente
@@ -133,9 +109,25 @@ public class MainActivity extends AppCompatActivity {
             stopCurrentActivity();
         });
 
+        // Richiesta permesso per notifiche (Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+
+        // Avvia notifiche periodiche ogni 6 ore
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(NotificationWorker.class, 6, TimeUnit.HOURS)
+                .build();
+        WorkManager.getInstance(this).enqueue(workRequest);
+
+
+        if (savedInstanceState == null) {
+            replaceFragment(new DashboardFragment());
+        }
+
 
     }
-
 
     private void replaceFragment(Fragment fragment) {
         getSupportFragmentManager()
@@ -195,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void startActivityUpdates() {
         Intent serviceIntent = new Intent(this, UserActivityIntentService.class);
         startService(serviceIntent);
@@ -204,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
     private void startActivity(String activityType) {
         new Thread(() -> {
             Date now = new Date();
-            UserActivity lastActivity = userActivityDao.getLastClosedActivity(userId); // Assicurati che esista questa query
+            UserActivity lastActivity = userActivityDao.getLastClosedActivity(userId); // recupera la query
 
             if (lastActivity != null && lastActivity.end_activity != null) {
                 long gapMillis = now.getTime() - lastActivity.end_activity.getTime();
@@ -222,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            // Ora inserisci l'attività nuova (con start_activity = now)
+            //inserisce l'attività nuova (con start_activity = now)
             UserActivity activity = new UserActivity(activityType);
             activity.user_id = userId;
             activity.start_activity = now;
@@ -233,9 +224,8 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-
     private void endCurrentActivity() {
-        Date endTime = new Date(); // Usa java.util.Date, non long
+        Date endTime = new Date(); // Usa java.util.Date,
         new Thread(() -> userActivityDao.endLastActivity(userId, endTime)).start();
     }
 
