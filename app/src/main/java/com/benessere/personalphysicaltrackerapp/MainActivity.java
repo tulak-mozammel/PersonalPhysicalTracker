@@ -26,13 +26,11 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import java.util.concurrent.TimeUnit;
-
 import java.util.Date;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
-
 
     private Button btnDashboard;
     private Button btnFirst;
@@ -88,19 +86,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnStartStill.setOnClickListener(v -> {
-            //endCurrentActivity(); // chiude quella precedente
+            stopCurrentActivity(); // chiude quella precedente
             startActivity("Still");
             Toast.makeText(this, "Started Still", Toast.LENGTH_SHORT).show();
         });
 
         btnStartWalking.setOnClickListener(v -> {
-            //endCurrentActivity(); // chiude quella precedente
+            stopCurrentActivity(); // chiude quella precedente
             startActivity("Walking");
             startService(new Intent(this, StepCounterService.class)); // avvia contapassi
             Toast.makeText(this, "Started Walking", Toast.LENGTH_SHORT).show();
         });
 
         btnStartDriving.setOnClickListener(v -> {
+            stopCurrentActivity();// chiude quella precedente
             startActivity("Driving");
             Toast.makeText(this, "Started Driving", Toast.LENGTH_SHORT).show();
         });

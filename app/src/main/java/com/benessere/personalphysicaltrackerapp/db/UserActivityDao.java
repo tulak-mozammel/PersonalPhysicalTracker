@@ -42,7 +42,6 @@ public interface UserActivityDao {
     @Query("SELECT * FROM UserActivity WHERE user_id = :userId AND start_activity >= :startOfMonth")
     LiveData<List<UserActivity>> getActivitiesFromMonth(int userId, long startOfMonth);
 
-
     @Update
     void update(UserActivity activity);
 

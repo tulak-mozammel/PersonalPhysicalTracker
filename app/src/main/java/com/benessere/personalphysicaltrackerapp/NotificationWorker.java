@@ -37,7 +37,7 @@ public class NotificationWorker extends Worker {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), channelId)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // usa un'icona valida
+                .setSmallIcon(R.drawable.img) // un'icona
                 .setAutoCancel(true);
 
         manager.notify(1, builder.build());
