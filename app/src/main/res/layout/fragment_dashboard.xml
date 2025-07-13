@@ -13,8 +13,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Loading..."
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
             android:padding="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
         <ListView
             android:id="@+id/listViewActivities"
             android:layout_width="match_parent"
@@ -26,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="25dp">
 
             <RadioButton
                 android:id="@+id/radioAll"

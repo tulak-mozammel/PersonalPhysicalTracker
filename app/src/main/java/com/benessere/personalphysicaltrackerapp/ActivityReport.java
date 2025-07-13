@@ -62,19 +62,26 @@ public class ActivityReport extends AppCompatActivity {
         long walkingTime = 0;
         long stillTime = 0;
         long drivingTime = 0;
+        long unknownTime = 0;
 
         for (UserActivity activity : activities) {
             if (activity.end_activity != null && activity.start_activity != null) {
                 long duration = activity.end_activity.getTime() - activity.start_activity.getTime();
 
-                if ("Walking".equals(activity.Type)) {
-                    walkingTime += duration;
-                } else if ("Still".equals(activity.Type)) {
-                    stillTime += duration;
+                switch (activity.Type) {
+                    case "Walking":
+                        walkingTime += duration;
+                        break;
+                    case "Still":
+                        stillTime += duration;
+                        break;
+                    case "Driving":
+                        drivingTime += duration;
+                        break;
+                    case "Unknown":
+                        unknownTime += duration;
+                        break;
                 }
-             else if ("Driving".equalsIgnoreCase(activity.Type)) {
-                drivingTime += duration;
-            }
             }
         }
 
@@ -82,9 +89,18 @@ public class ActivityReport extends AppCompatActivity {
         if (walkingTime > 0) entries.add(new PieEntry(walkingTime, "Walking"));
         if (stillTime > 0) entries.add(new PieEntry(stillTime, "Still"));
         if (drivingTime > 0) entries.add(new PieEntry(drivingTime, "Driving"));
+        if (unknownTime > 0) entries.add(new PieEntry(unknownTime, "Unknown"));
 
         PieDataSet dataSet = new PieDataSet(entries, "Attività Mese");
-        dataSet.setColors(Color.GREEN, Color.GRAY, Color.BLUE); // Colori per ogni attività
+
+        // 4 colori (1 per ciascuna attività)
+        dataSet.setColors(
+                Color.GREEN,     // Walking
+                Color.GRAY,      // Still
+                Color.BLUE,      // Driving
+                Color.LTGRAY     // Unknown
+        );
+
         dataSet.setValueTextColor(Color.BLACK);
         dataSet.setValueTextSize(12f);
 
@@ -96,6 +112,7 @@ public class ActivityReport extends AppCompatActivity {
         pieChart.setEntryLabelTextSize(12f);
         pieChart.invalidate(); // Refresh del grafico
     }
+
 
     private void updateLineChart(List<UserActivity> activities) {
         // Mappa dei passi per giorno (giorno → somma dei passi)

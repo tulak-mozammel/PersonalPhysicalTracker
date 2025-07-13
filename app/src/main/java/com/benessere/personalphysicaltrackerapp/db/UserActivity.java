@@ -39,14 +39,16 @@ public class UserActivity {
     @Override
     public String toString() {
         String pattern = "dd/MM/yyyy";
-        DateFormat df = new SimpleDateFormat(pattern);
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         if (end_activity != null) {
             long difference = end_activity.getTime() - start_activity.getTime();
             long minutes = (difference / (1000 * 60)) % 60;
             long hours = (difference / (1000 * 60 * 60)) % 24;
 
-            return "Type: " + Type + " | Duration: " + hours + " hours and " + minutes + " minutes";
+            return "Type: " + Type +
+                    " | Date: " + df.format(start_activity) +
+                    " | Duration: " + hours + "h " + minutes + "m";
         }
 
         return "Type: " + Type + " | Start: " + df.format(start_activity);

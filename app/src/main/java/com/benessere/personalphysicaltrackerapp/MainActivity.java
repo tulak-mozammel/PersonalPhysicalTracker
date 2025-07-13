@@ -22,6 +22,12 @@ import android.widget.Button;
 import android.Manifest;
 import android.widget.Toast;
 
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
+import java.util.concurrent.TimeUnit;
+
 import java.util.Date;
 import java.util.List;
 
@@ -62,6 +68,20 @@ public class MainActivity extends AppCompatActivity {
         btnStartDriving = findViewById(R.id.btnStartDriving);
         btnStopActivity = findViewById(R.id.btnStopActivity);
         Button BtnopenReport = findViewById(R.id.openReportBtn);
+
+        // 👉 Richiesta permesso per notifiche (Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+
+
+
+        // Avvia notifiche periodiche ogni 6 ore
+        PeriodicWorkRequest workRequest = new PeriodicWorkRequest.Builder(NotificationWorker.class, 6, TimeUnit.HOURS)
+                .build();
+        WorkManager.getInstance(this).enqueue(workRequest);
 
 
         if (savedInstanceState == null) {
@@ -182,15 +202,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startActivity(String activityType) {
-        UserActivity activity = new UserActivity(activityType);
-        activity.user_id = userId;
-        if (userActivityDao == null) {
-            Log.e("MainActivity", "userActivityDao è null!");
-        } else {
-            new Thread(() -> userActivityDao.insertAll(List.of(activity))).start();
-        }
+        new Thread(() -> {
+            Date now = new Date();
+            UserActivity lastActivity = userActivityDao.getLastClosedActivity(userId); // Assicurati che esista questa query
 
+            if (lastActivity != null && lastActivity.end_activity != null) {
+                long gapMillis = now.getTime() - lastActivity.end_activity.getTime();
+                long tenMinutes = 10 * 60 * 1000;
+
+                if (gapMillis > tenMinutes) {
+                    // Inserisci attività "Unknown"
+                    UserActivity unknown = new UserActivity("Unknown");
+                    unknown.user_id = userId;
+                    unknown.start_activity = lastActivity.end_activity;
+                    unknown.end_activity = now;
+
+                    userActivityDao.insertAll(List.of(unknown));
+                    Log.d("MainActivity", "Attività Unknown inserita per colmare il buco");
+                }
+            }
+
+            // Ora inserisci l'attività nuova (con start_activity = now)
+            UserActivity activity = new UserActivity(activityType);
+            activity.user_id = userId;
+            activity.start_activity = now;
+
+            userActivityDao.insertAll(List.of(activity));
+
+            runOnUiThread(() -> Toast.makeText(this, "Started " + activityType, Toast.LENGTH_SHORT).show());
+        }).start();
     }
+
 
     private void endCurrentActivity() {
         Date endTime = new Date(); // Usa java.util.Date, non long
